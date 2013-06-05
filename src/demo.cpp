@@ -8,7 +8,8 @@ Gpio spi2_miso(GPIOB, GPIO_Pin_14, RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO );
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC );
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC );
 
-St7735r tft(SPI2, GPIOC, GPIO_Pin_0, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_1,
+St7735r tft(SPI2, RCC_APB1Periph_SPI2, RCC_APB1PeriphClockCmd, GPIOC,
+		GPIO_Pin_0, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_1,
 		RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_2, RCC_APB2Periph_GPIOC );
 
 void setup() {

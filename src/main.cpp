@@ -26,7 +26,18 @@ void init() {
 			RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO );
 	usart_rx.init(GPIO_Mode_IN_FLOATING);
 
-	usart.init(57600, USART_WordLength_9b, USART_StopBits_1, USART_Parity_Even);
+//	Gpio usart_tx(GPIOB, GPIO_Pin_6,
+//			RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO );
+//	usart_tx.init(GPIO_Mode_AF_PP);
+//
+//	Gpio usart_rx(GPIOB, GPIO_Pin_7,
+//			RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO );
+//	usart_rx.init(GPIO_Mode_IN_FLOATING);
+
+//	GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);
+
+	usart.init(57600, USART_WordLength_9b, USART_StopBits_1,
+			USART_Parity_Even );
 
 	setvbuf(stdin, NULL, _IONBF, 0);
 	setvbuf(stdout, NULL, _IONBF, 0);
