@@ -14,13 +14,11 @@ St7735r tft(SPI2, RCC_APB1Periph_SPI2, RCC_APB1PeriphClockCmd, GPIOC,
 
 void setup() {
 
-	led_blue.toggle();
-
 	fprintf(stderr, "hello, world\r\n");
 
 	spi2_sck.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
-	spi2_mosi.init(GPIO_Mode_IN_FLOATING, GPIO_Speed_50MHz);
-	spi2_miso.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
+	spi2_mosi.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
+	spi2_miso.init(GPIO_Mode_IN_FLOATING, GPIO_Speed_50MHz);
 
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
@@ -41,8 +39,17 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	tft.setAddrWindow(0, 0, 31, 31);
-	tft.pushColor(0x00ff);
+	tft.setAddrWindow(0, 0, 63, 63);
+	tft.pushColor(0xffff, 64 * 64);
+
+	tft.setAddrWindow(64, 0, 127, 63);
+	tft.pushColor(0x001f, 128 * 128);
+
+	tft.setAddrWindow(0, 64, 63, 127);
+	tft.pushColor(0xf100, 128 * 128);
+
+	tft.setAddrWindow(64, 64, 127, 127);
+	tft.pushColor(0x07e0, 128 * 128);
 
 	led_blue.toggle();
 	delay(500);
