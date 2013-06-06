@@ -8,9 +8,12 @@ Gpio spi2_miso(GPIOB, GPIO_Pin_14, RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO );
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC );
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC );
 
-St7735r tft(SPI2, RCC_APB1Periph_SPI2, RCC_APB1PeriphClockCmd, GPIOC,
-		GPIO_Pin_0, RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_1,
-		RCC_APB2Periph_GPIOC, GPIOC, GPIO_Pin_2, RCC_APB2Periph_GPIOC );
+Spi spi(SPI2, RCC_APB1Periph_SPI2, RCC_APB1PeriphClockCmd);
+Gpio tft_ss(GPIOC, GPIO_Pin_0, RCC_APB2Periph_GPIOC );
+Gpio tft_reset(GPIOC, GPIO_Pin_1, RCC_APB2Periph_GPIOC );
+Gpio tft_rs(GPIOC, GPIO_Pin_2, RCC_APB2Periph_GPIOC );
+
+St7735r tft(spi, tft_ss, tft_reset, tft_rs);
 
 void setup() {
 
@@ -32,6 +35,8 @@ void setup() {
 	tft.init();
 }
 
+uint16_t colors[4] = { 0xffff, 0x1f, 0x07e0, 0xf800 };
+
 void loop() {
 	while (usart.available()) {
 		char c = usart.read();
@@ -39,19 +44,18 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	tft.setAddrWindow(0, 0, 63, 63);
-	tft.pushColor(0xffff, 64 * 64);
+	static uint8_t i = 0;
 
-	tft.setAddrWindow(64, 0, 127, 63);
-	tft.pushColor(0x001f, 128 * 128);
+	i %= 4;
 
-	tft.setAddrWindow(0, 64, 63, 127);
-	tft.pushColor(0xf100, 128 * 128);
+	for (uint8_t j = 0; j < 4; j++) {
+		uint16_t x = (i + j) % 4 / 2 * 64, y = (i + j) % 4 % 2 * 64;
+		tft.setAddrWindow(x, y, x + 63, y + 63);
+		tft.pushColor(colors[j], 64 * 64);
+	}
 
-	tft.setAddrWindow(64, 64, 127, 127);
-	tft.pushColor(0x07e0, 128 * 128);
+	i++;
 
 	led_blue.toggle();
-	delay(500);
 }
 
