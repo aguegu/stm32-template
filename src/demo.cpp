@@ -57,5 +57,7 @@ void loop() {
 	i++;
 
 	led_blue.toggle();
+
+	delay(200);
 }
 
