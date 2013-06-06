@@ -51,7 +51,7 @@ void loop() {
 	for (uint8_t j = 0; j < 4; j++) {
 		uint16_t x = (i + j) % 4 / 2 * 64, y = (i + j) % 4 % 2 * 64;
 		tft.setAddrWindow(x, y, x + 63, y + 63);
-		tft.pushColor(colors[j], 64 * 64);
+		tft.write16(1, colors[j], 64 * 64);
 	}
 
 	i++;
