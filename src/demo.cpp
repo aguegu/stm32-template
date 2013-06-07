@@ -9,7 +9,7 @@ Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC );
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC );
 
 Spi spi(SPI2, RCC_APB1Periph_SPI2, RCC_APB1PeriphClockCmd);
-Dma dma(DMA1_Channel5, RCC_AHBPeriph_DMA1, DMA1_FLAG_TC5);
+Dma dma(DMA1_Channel5, RCC_AHBPeriph_DMA1, DMA1_FLAG_TC5 );
 
 Gpio tft_ss(GPIOC, GPIO_Pin_0, RCC_APB2Periph_GPIOC );
 Gpio tft_reset(GPIOC, GPIO_Pin_1, RCC_APB2Periph_GPIOC );
@@ -38,6 +38,8 @@ void setup() {
 }
 
 uint16_t colors[4] = { 0xffff, 0x1f, 0x07e0, 0xf800 };
+uint8_t x[4] = { 0x00, 0x00, 0x40, 0x40 };
+uint8_t y[4] = { 0x00, 0x40, 0x40, 0x00 };
 
 void loop() {
 	while (usart.available()) {
@@ -51,16 +53,13 @@ void loop() {
 	i %= 4;
 
 	for (uint8_t j = 0; j < 4; j++) {
-		uint16_t x = (i + j) % 4 / 2 * 64, y = (i + j) % 4 % 2 * 64;
-		tft.setAddrWindow(x, y, x + 63, y + 63);
+		uint8_t k = (i + j) % 4;
+		tft.setAddrWindow(x[k], y[k], x[k] + 63, y[k] + 63);
 		tft.write16(1, colors[j], 64 * 64);
 	}
 
-	delay(200);
 	i++;
 
 	led_blue.toggle();
-
-//	delay(200);
 }
 
