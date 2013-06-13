@@ -36,12 +36,12 @@ void loop() {
 //	vu32 t = sd2068.waitAck();
 //	sd2068.stop();
 
-	u8 t = 0, cmd = 0;
+	u8 t = 0, cmd = 0, w = 0;
 
-	ds3231.writeTo(0xd0, &cmd, 1);
+	w = ds3231.write(0xd0, &cmd, 1);
 	ds3231.readFrom(0xd0, &t, 1);
 
-	usart.write(t);
+	printf("[%02x] %02x\r\n", w, t);
 
 	led_blue.toggle();
 
