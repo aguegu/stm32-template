@@ -20,7 +20,7 @@ void setup() {
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 	TIM_Cmd(TIM2, ENABLE);
 
-
+	ds3231.init();
 }
 
 void loop() {
@@ -30,18 +30,12 @@ void loop() {
 		led_blue.toggle();
 	}
 
+	u8 t[3], cmd = 0, w = 0;
 
-//	sd2068.start();
-//	sd2068.transmit((0x68 << 1) | 0x01);
-//	vu32 t = sd2068.waitAck();
-//	sd2068.stop();
+	w = ds3231.write(0x68, &cmd, 1);
+	ds3231.readFrom(0x68, t, 3);
 
-	u8 t = 0, cmd = 0, w = 0;
-
-	w = ds3231.write(0xd0, &cmd, 1);
-	ds3231.readFrom(0xd0, &t, 1);
-
-	printf("[%02x] %02x\r\n", w, t);
+	printf("[%02x] %02x:%02x:%02x\r\n", w, t[2], t[1], t[0]);
 
 	led_blue.toggle();
 
