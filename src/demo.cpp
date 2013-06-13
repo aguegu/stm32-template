@@ -33,13 +33,13 @@ void loop() {
 	u8 t[3], cmd = 0, w = 0;
 
 	w = ds3231.write(0x68, &cmd, 1);
-	ds3231.readFrom(0x68, t, 3);
+	ds3231.read(0x68, t, 3);
 
 	printf("[%02x] %02x:%02x:%02x\r\n", w, t[2], t[1], t[0]);
 
 	led_blue.toggle();
 
-	delay(500);
+	delay(1000);
 
 }
 
