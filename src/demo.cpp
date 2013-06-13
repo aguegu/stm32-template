@@ -22,7 +22,6 @@ void setup() {
 	i2c_scl.init(GPIO_Mode_AF_OD);
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
-
 	i2c.init();
 
 	uint8_t w;
@@ -34,6 +33,9 @@ void setup() {
 	uint8_t cache2[] = { 0x0f, 0x00 };
 	w = i2c.write(0xd0, cache2, 2);
 	fprintf(stderr, "%02x:\r\n", w);
+
+	uint8_t cache3[] = {0x00, 0x00, 0x48, 0x22, 0x05, 0x13, 0x06, 0x13};
+	w = i2c.write(0xd0, cache3, 8);
 }
 
 void loop() {
@@ -43,27 +45,17 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	static u8 h, m, s = 0;
+	static u8 s[7];
 	uint8_t w, r;
 
 	uint8_t cmd = 0;
 	w = i2c.write(0xd0, &cmd, 1);
-	r = i2c.read(0xd0, &s, 1);
+	r = i2c.read(0xd0, s, 7);
 
-	cmd = 1;
-	i2c.write(0xd0, &cmd, 1);
-	i2c.read(0xd0, &m, 1);
-
-	cmd = 2;
-	i2c.write(0xd0, &cmd, 1);
-	i2c.read(0xd0, &h, 1);
-
-	fprintf(stderr, "[%02x %02x] %02x:%02x:%02x\r\n", w, r, h, m, s);
+	fprintf(stderr, "[%02x %02x] %02x-%02x-%02x %02x %02x:%02x:%02x\r\n", w, r,
+			s[6], s[5], s[4], s[3], s[2], s[1], s[0]);
 
 	led_blue.toggle();
 	delay(1000);
-
-
-
 }
 

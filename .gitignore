@@ -9,4 +9,6 @@ i2c
 dma
 st7735r
 spi
+i2c-soft
+
 
