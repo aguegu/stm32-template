@@ -27,15 +27,15 @@ void setup() {
 	uint8_t w;
 
 	uint8_t cache[] = { 0x0e, 0x9c };
-	w = i2c.write(0xd0, cache, 2);
+	w = i2c.write(0x68, cache, 2);
 	fprintf(stderr, "%02x:\r\n", w);
 
 	uint8_t cache2[] = { 0x0f, 0x00 };
-	w = i2c.write(0xd0, cache2, 2);
+	w = i2c.write(0x68, cache2, 2);
 	fprintf(stderr, "%02x:\r\n", w);
 
 	uint8_t cache3[] = {0x00, 0x00, 0x48, 0x22, 0x05, 0x13, 0x06, 0x13};
-	w = i2c.write(0xd0, cache3, 8);
+	w = i2c.write(0x68, cache3, 8);
 }
 
 void loop() {
@@ -49,8 +49,8 @@ void loop() {
 	uint8_t w, r;
 
 	uint8_t cmd = 0;
-	w = i2c.write(0xd0, &cmd, 1);
-	r = i2c.read(0xd0, s, 7);
+	w = i2c.write(0x68, &cmd, 1);
+	r = i2c.read(0x68, s, 7);
 
 	fprintf(stderr, "[%02x %02x] %02x-%02x-%02x %02x %02x:%02x:%02x\r\n", w, r,
 			s[6], s[5], s[4], s[3], s[2], s[1], s[0]);
