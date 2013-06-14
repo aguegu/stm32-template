@@ -41,7 +41,7 @@ void loop() {
 
 	led_blue.toggle();
 
-	delay(500);
+	delay(1000);
 
 }
 
