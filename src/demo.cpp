@@ -5,9 +5,12 @@
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC );
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC );
 
-Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB );
 Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB );
-I2cSoft ds3231(i2c_sda, i2c_scl);
+Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB );
+I2cSoft isl1208(i2c_sda, i2c_scl);
+
+#define I2C_ADDR	0x6f
+//#define I2C_ADDR	0x32
 
 void setup() {
 
@@ -20,9 +23,10 @@ void setup() {
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 	TIM_Cmd(TIM2, ENABLE);
 
-	ds3231.init();
-	uint8_t cmd[2] = {0x00, 0x00};
-	ds3231.write(0x68, cmd, 2);
+	isl1208.init();
+
+	uint8_t cmd[2] = { 0x07, 0x90 };
+	isl1208.write(I2C_ADDR, cmd, 2);
 }
 
 void loop() {
@@ -32,12 +36,12 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	u8 t[3], cmd = 0, w = 0;
+	u8 t[8], cmd = 0;
+	isl1208.write(I2C_ADDR, &cmd, 1);
+	isl1208.read(I2C_ADDR, t, 8);
 
-	w = ds3231.write(0x68, &cmd, 1);
-	ds3231.read(0x68, t, 3);
-
-	printf("[%02x] %02x:%02x:%02x\r\n", w, t[2], t[1], t[0]);
+	for (u8 i = 0; i < 8; i++)
+		usart.write(t[i]);
 
 	led_blue.toggle();
 
