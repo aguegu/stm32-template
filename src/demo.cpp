@@ -12,10 +12,10 @@ void setup() {
 	led_blue.init(GPIO_Mode_Out_PP);
 
 	nvic.init(TIM2_IRQn, 0, 3, ENABLE);
+	nvic.init(TIM1_CC_IRQn, 0, 1, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
 	t2.init(1000, 1000);
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
-	TIM_Cmd(TIM2, ENABLE);
 
 	ultrasonic_sensor_trig.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
 	ultrasonic_sensor_echo.init(GPIO_Mode_IPD, GPIO_Speed_50MHz);
@@ -25,34 +25,57 @@ void setup() {
 	Tim t4(TIM4, RCC_APB1Periph_TIM4, RCC_APB1PeriphClockCmd);
 	t4.init(100000, 10000);
 
-	TimOc t4_oc4;
+	TimOc t4_oc4(TIM4, TIM_OC4Init, TIM_SetCompare4);
 	t4_oc4.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
-	TIM_OutputNState_Disable, 1);
+	TIM_OutputNState_Disable);
+	t4_oc4.setCompare(1);
 
-	t4_oc4.apply(TIM4, TIM_OC4Init);
+	Tim t1(TIM1, RCC_APB2Periph_TIM1, RCC_APB2PeriphClockCmd);
+	t1.init();
+	TIM_ICInitTypeDef TIM_ICInitStructure;
+
+	TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
+	TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+	TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+	TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+	TIM_ICInitStructure.TIM_ICFilter = 0x0;
+
+	TIM_ICInit(TIM1, &TIM_ICInitStructure);
+
+	TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
+	TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
+	TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI;
+	TIM_ICInit(TIM1, &TIM_ICInitStructure);
+
+	TIM_SelectInputTrigger(TIM1, TIM_TS_TI1FP1);
+	TIM_SelectSlaveMode(TIM1, TIM_SlaveMode_Reset);
+	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
+
+	//TIM_Cmd(TIM1, ENABLE);
+	//TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
+	TIM_ITConfig(TIM1, TIM_IT_CC2, ENABLE);
 }
 
 void loop() {
+
+	extern uint16_t capture;
+
 	while (usart.available()) {
 		char c = usart.read();
 		fprintf(stdout, "0x%02X\r\n", c);
-		led_blue.toggle();
 	}
 
 	led_blue.toggle();
 
-//	ultrasonic_sensor_trig.set(Bit_SET);
-//	ultrasonic_sensor_trig.set(Bit_RESET);
+//	uint32_t t = 0;
+//	while (ultrasonic_sensor_echo.getInput() == Bit_RESET)
+//		;
+//	while (ultrasonic_sensor_echo.getInput() == Bit_SET && t < 2500)
+//		t++;
+//	fprintf(stdout, "%ld\r\n", t);
 
-	uint32_t t = 0;
+	fprintf(stdout, "%d\r\n", capture);
 
-	while (ultrasonic_sensor_echo.getInput() == Bit_RESET)
-		;
-	while (ultrasonic_sensor_echo.getInput() == Bit_SET)
-		t++;
-
-	fprintf(stdout, "%ld\r\n", t);
-
-	delay(1000);
+	delay(200);
 }
 
