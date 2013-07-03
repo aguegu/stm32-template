@@ -27,7 +27,7 @@ void setup() {
 
 	TimOc t4_oc4;
 	t4_oc4.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
-			TIM_OutputNState_Disable, 1);
+	TIM_OutputNState_Disable, 1);
 
 	t4_oc4.apply(TIM4, TIM_OC4Init);
 }
@@ -48,9 +48,8 @@ void loop() {
 
 	while (ultrasonic_sensor_echo.getInput() == Bit_RESET)
 		;
-	while (ultrasonic_sensor_echo.getInput() == Bit_SET) {
+	while (ultrasonic_sensor_echo.getInput() == Bit_SET)
 		t++;
-	}
 
 	fprintf(stdout, "%ld\r\n", t);
 
