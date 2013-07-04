@@ -26,8 +26,9 @@ void setup() {
 	t4.init(100000, 10000);
 
 	TimOc t4_oc4(TIM4, TIM_OC4Init, TIM_SetCompare4);
-	t4_oc4.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
-	TIM_OutputNState_Disable);
+	t4_oc4.init(TIM_OCMode_PWM1,
+			TIM_OutputState_Enable,
+			TIM_OutputNState_Disable);
 	t4_oc4.setCompare(1);
 
 	Tim t1(TIM1, RCC_APB2Periph_TIM1, RCC_APB2PeriphClockCmd);
