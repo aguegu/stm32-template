@@ -32,20 +32,13 @@ void setup() {
 
 	Tim t1(TIM1, RCC_APB2Periph_TIM1, RCC_APB2PeriphClockCmd);
 	t1.init(2000000);
-	TIM_ICInitTypeDef TIM_ICInitStructure;
 
-	TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
-	TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
-	TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
-	TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
-	TIM_ICInitStructure.TIM_ICFilter = 0x0;
+	TimIc t1_ic1(TIM1);
+	t1_ic1.init(TIM_Channel_1);
 
-	TIM_ICInit(TIM1, &TIM_ICInitStructure);
-
-	TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
-	TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Falling;
-	TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI;
-	TIM_ICInit(TIM1, &TIM_ICInitStructure);
+	TimIc t1_ic2(TIM1);
+	t1_ic2.init(TIM_Channel_2, TIM_ICPolarity_Falling,
+	TIM_ICSelection_IndirectTI);
 
 	TIM_SelectInputTrigger(TIM1, TIM_TS_TI1FP1);
 	TIM_SelectSlaveMode(TIM1, TIM_SlaveMode_Reset);

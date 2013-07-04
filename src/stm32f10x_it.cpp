@@ -150,7 +150,7 @@ void SysTick_Handler(void) {
  {
  }*/
 
-__IO uint16_t capture = 3;
+__IO uint16_t capture = 0;
 
 void TIM1_CC_IRQHandler(void) {
 
@@ -164,8 +164,8 @@ void TIM2_IRQHandler(void) {
 	extern Gpio led_green;
 
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET) {
-		led_green.toggle();
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+		led_green.toggle();
 	}
 }
 
