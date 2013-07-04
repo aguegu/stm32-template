@@ -154,28 +154,10 @@ __IO uint16_t capture = 3;
 
 void TIM1_CC_IRQHandler(void) {
 
-//	if (TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET) {
-//		static volatile uint16_t stamp_old = 0;
-//		TIM_ClearITPendingBit(TIM1, TIM_IT_CC1);
-//		volatile uint16_t stamp_new = TIM_GetCapture1(TIM1);
-//		capture = stamp_new - stamp_old;
-//		stamp_old = stamp_new;
-//	}
-
-//	static volatile uint16_t stamp_old;
-//	if (TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET) {
-//		TIM_ClearITPendingBit(TIM1, TIM_IT_CC1);
-//		stamp_old = TIM_GetCapture1(TIM1);
-//	}
-
 	if (TIM_GetITStatus(TIM1, TIM_IT_CC2) == SET) {
 		TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
-		volatile uint16_t stamp_old = TIM_GetCapture1(TIM1);
-		volatile uint16_t stamp_new = TIM_GetCapture2(TIM1);
-		capture = +stamp_new - stamp_old;
-//		capture = stamp_new;
+		capture = TIM_GetCapture2(TIM1);
 	}
-
 }
 
 void TIM2_IRQHandler(void) {

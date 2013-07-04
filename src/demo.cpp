@@ -47,11 +47,10 @@ void setup() {
 	TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI;
 	TIM_ICInit(TIM1, &TIM_ICInitStructure);
 
-//	TIM_SelectInputTrigger(TIM1, TIM_TS_TI1FP1);
-//	TIM_SelectSlaveMode(TIM1, TIM_SlaveMode_Reset);
-//	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
+	TIM_SelectInputTrigger(TIM1, TIM_TS_TI1FP1);
+	TIM_SelectSlaveMode(TIM1, TIM_SlaveMode_Reset);
+	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
 
-//TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
 	TIM_ITConfig(TIM1, TIM_IT_CC2, ENABLE);
 }
 
@@ -65,13 +64,6 @@ void loop() {
 	}
 
 	led_blue.toggle();
-
-//	uint32_t t = 0;
-//	while (ultrasonic_sensor_echo.getInput() == Bit_RESET)
-//		;
-//	while (ultrasonic_sensor_echo.getInput() == Bit_SET && t < 2500)
-//		t++;
-//	fprintf(stdout, "%ld\r\n", t);
 
 	fprintf(stdout, "%d cm %d\r\n", capture / 58 / 2, capture);
 	delay(200);
