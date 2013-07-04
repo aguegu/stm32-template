@@ -18,7 +18,7 @@ void setup() {
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 
 	ultrasonic_sensor_trig.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
-	ultrasonic_sensor_echo.init(GPIO_Mode_IPD, GPIO_Speed_50MHz);
+	ultrasonic_sensor_echo.init(GPIO_Mode_IPU, GPIO_Speed_50MHz);
 
 	//ultrasonic_sensor_trig.set(Bit_RESET);
 
@@ -31,7 +31,7 @@ void setup() {
 	t4_oc4.setCompare(1);
 
 	Tim t1(TIM1, RCC_APB2Periph_TIM1, RCC_APB2PeriphClockCmd);
-	t1.init();
+	t1.init(2000000);
 	TIM_ICInitTypeDef TIM_ICInitStructure;
 
 	TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
@@ -47,12 +47,11 @@ void setup() {
 	TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_IndirectTI;
 	TIM_ICInit(TIM1, &TIM_ICInitStructure);
 
-	TIM_SelectInputTrigger(TIM1, TIM_TS_TI1FP1);
-	TIM_SelectSlaveMode(TIM1, TIM_SlaveMode_Reset);
-	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
+//	TIM_SelectInputTrigger(TIM1, TIM_TS_TI1FP1);
+//	TIM_SelectSlaveMode(TIM1, TIM_SlaveMode_Reset);
+//	TIM_SelectMasterSlaveMode(TIM1, TIM_MasterSlaveMode_Enable);
 
-	//TIM_Cmd(TIM1, ENABLE);
-	//TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
+//TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
 	TIM_ITConfig(TIM1, TIM_IT_CC2, ENABLE);
 }
 
@@ -74,8 +73,7 @@ void loop() {
 //		t++;
 //	fprintf(stdout, "%ld\r\n", t);
 
-	fprintf(stdout, "%d\r\n", capture);
-
+	fprintf(stdout, "%d cm %d\r\n", capture / 58 / 2, capture);
 	delay(200);
 }
 
