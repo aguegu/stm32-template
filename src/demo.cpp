@@ -2,8 +2,8 @@
 
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
-Adc adc(ADC1, RCC_APB2Periph_ADC1);
 Gpio potentiometer(GPIOA, GPIO_Pin_6, RCC_APB2Periph_GPIOA);
+Adc adc(ADC1, RCC_APB2Periph_ADC1);
 
 void setup() {
 
@@ -16,13 +16,10 @@ void setup() {
 	t2.init(1000, 1000);
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 
-	//RCC_ADCCLKConfig(RCC_PCLK2_Div2);
 	adc.init(ADC_Mode_Independent, DISABLE, DISABLE, ADC_ExternalTrigConv_None);
 	adc.configChannel(ADC_Channel_6, 1);
 
 	adc.calibrate();
-
-
 }
 
 void loop() {
