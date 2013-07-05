@@ -23,6 +23,6 @@ void loop() {
 	}
 
 	led_blue.toggle();
-	delayMicroseconds(1000000);
+	delayMicroseconds(100000);
 }
 
