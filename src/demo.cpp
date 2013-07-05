@@ -4,6 +4,7 @@ Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
 Gpio potentiometer(GPIOA, GPIO_Pin_6, RCC_APB2Periph_GPIOA);
 Adc adc(ADC1, RCC_APB2Periph_ADC1);
+Dma dma(DMA1_Channel1, RCC_AHBPeriph_DMA1, DMA1_FLAG_TC1);
 
 void setup() {
 
