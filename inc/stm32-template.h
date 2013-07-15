@@ -20,6 +20,7 @@
 #include "nvic/nvic.h"
 #include "i2c/i2c.h"
 #include "adc/adc.h"
+#include "dma/dma.h"
 
 void init();
 extern void setup();

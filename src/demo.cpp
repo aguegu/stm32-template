@@ -5,6 +5,7 @@ Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
 Gpio potentiometer(GPIOA, GPIO_Pin_6, RCC_APB2Periph_GPIOA);
 Adc adc(ADC1, RCC_APB2Periph_ADC1);
 Dma dma(DMA1_Channel1, RCC_AHBPeriph_DMA1, DMA1_FLAG_TC1);
+volatile uint16_t val;
 
 void setup() {
 
@@ -12,15 +13,33 @@ void setup() {
 	led_blue.init(GPIO_Mode_Out_PP);
 	potentiometer.init(GPIO_Mode_AIN);
 
-	nvic.init(TIM2_IRQn, 0, 3, ENABLE);
-	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
-	t2.init(1000, 1000);
-	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+	dma.init(adc.getAddress(),
+		(uint32_t) (&val),
+		DMA_DIR_PeripheralSRC, 1,
+		DMA_PeripheralInc_Disable,
+		DMA_MemoryInc_Disable,
+		DMA_PeripheralDataSize_HalfWord,
+		DMA_MemoryDataSize_HalfWord,
+		DMA_Mode_Circular,
+		DMA_Priority_High,
+		DMA_M2M_Disable);
 
-	adc.init(ADC_Mode_Independent, DISABLE, DISABLE, ADC_ExternalTrigConv_None);
+//	nvic.init(TIM2_IRQn, 0, 3, ENABLE);
+//	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
+//	t2.init(1000, 1000);
+//	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+
+//	TimOc t2_oc2(TIM2, TIM_OC2Init, TIM_SetCompare2);
+//	t2_oc2.init(TIM_OCMode_Timing, TIM_OutputState_Disable, TIM_OutputNState_Disable, 1000);
+
+	adc.init(ADC_Mode_Independent, DISABLE, ENABLE, ADC_ExternalTrigConv_None);
 	adc.configChannel(ADC_Channel_6, 1);
 
+	adc.setDma();
 	adc.calibrate();
+
+	dma.setEnable();
+	adc.startSoftwareConvert();
 }
 
 void loop() {
@@ -30,11 +49,9 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	adc.startSoftwareConvert();
-	printf("%d\r\n", adc.getValue());
+	printf("%d\r\n", val);
 
 	led_blue.toggle();
-
 	delayMicroseconds(100000);
 }
 
