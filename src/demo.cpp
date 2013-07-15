@@ -13,16 +13,11 @@ void setup() {
 	led_blue.init(GPIO_Mode_Out_PP);
 	potentiometer.init(GPIO_Mode_AIN);
 
-	dma.init(adc.getAddress(),
-		(uint32_t) (&val),
-		DMA_DIR_PeripheralSRC, 1,
-		DMA_PeripheralInc_Disable,
-		DMA_MemoryInc_Disable,
-		DMA_PeripheralDataSize_HalfWord,
-		DMA_MemoryDataSize_HalfWord,
-		DMA_Mode_Circular,
-		DMA_Priority_High,
-		DMA_M2M_Disable);
+	dma.setPeriphToConf(adc.getAddress(), DMA_PeripheralDataSize_HalfWord, DMA_PeripheralInc_Disable);
+	dma.setMemoryToConf((uint32_t) (&val), DMA_MemoryDataSize_HalfWord, DMA_MemoryInc_Disable);
+	dma.setTransferToConf(1, DMA_DIR_PeripheralSRC);
+	dma.setFunctionToConf(DMA_Mode_Circular, DMA_Priority_High, DMA_M2M_Disable);
+	dma.initWithConf();
 
 //	nvic.init(TIM2_IRQn, 0, 3, ENABLE);
 //	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
