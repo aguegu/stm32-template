@@ -1,11 +1,4 @@
 Debug/
 Release/
 
-gpio
-usart
-tim
-nvic
-i2c
-spi
-st7735r
-dma
+stm32libs
