@@ -18,21 +18,19 @@ void setup() {
 void loop() {
 
 	while (usart.available()) {
-		//char c =
-		usart.read();
-//		fprintf(stdout, "0x%02X\r\n", c);
+		char c = usart.read();
+
+		fprintf(stdout, "0x%02X\r\n", c);
+		usart.flush();
+
 		led_blue.toggle();
 	}
 
 	static uint8_t i = 0;
-	usart.setMode(Bit_SET);
+
 	fprintf(stdout, "0x%02x\r\n", i++);
 	usart.flush();
-	usart.setMode(Bit_RESET);
 
-//	led_blue.toggle();
 	delayMicroseconds(500000);
-
-
 }
 

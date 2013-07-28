@@ -28,7 +28,7 @@ void init() {
 		RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO);
 	usart_rx.init(GPIO_Mode_IN_FLOATING);
 
-	usart.init(9600);
+	usart.init(115200);
 
 	setvbuf(stdin, NULL, _IONBF, 0);
 	setvbuf(stdout, NULL, _IONBF, 0);
