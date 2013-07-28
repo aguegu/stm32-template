@@ -25,10 +25,14 @@ void loop() {
 	}
 
 	static uint8_t i = 0;
+	usart.setMode(Bit_SET);
 	fprintf(stdout, "0x%02x\r\n", i++);
+	usart.flush();
+	usart.setMode(Bit_RESET);
 
 //	led_blue.toggle();
 	delayMicroseconds(500000);
+
 
 }
 
