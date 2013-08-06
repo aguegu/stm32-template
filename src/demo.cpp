@@ -9,15 +9,15 @@ void setup() {
 
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
-	servo.init(GPIO_Mode_AF_PP);
 
+	servo.init(GPIO_Mode_AF_PP);
 	Tim t4(TIM4, RCC_APB1Periph_TIM4, RCC_APB1PeriphClockCmd);
 	t4.init(1000000, 20000);
 
 	t4_oc4.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
 			TIM_OutputNState_Disable);
 
-	nvic.init(TIM2_IRQn, 0, 3, ENABLE);
+	nvic.configure(TIM2_IRQn, 0, 3, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
 	t2.init(1000, 1000);
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
