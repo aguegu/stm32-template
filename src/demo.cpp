@@ -2,7 +2,15 @@
 
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
-Gpio servo(GPIOB, GPIO_Pin_9, RCC_APB2Periph_GPIOB);
+
+Gpio servo1(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
+Gpio servo2(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
+Gpio servo3(GPIOB, GPIO_Pin_8, RCC_APB2Periph_GPIOB);
+Gpio servo4(GPIOB, GPIO_Pin_9, RCC_APB2Periph_GPIOB);
+
+TimOc t4_oc1(TIM4, TIM_OC1Init, TIM_SetCompare1);
+TimOc t4_oc2(TIM4, TIM_OC2Init, TIM_SetCompare2);
+TimOc t4_oc3(TIM4, TIM_OC3Init, TIM_SetCompare3);
 TimOc t4_oc4(TIM4, TIM_OC4Init, TIM_SetCompare4);
 
 void setup() {
@@ -10,9 +18,22 @@ void setup() {
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
 
-	servo.init(GPIO_Mode_AF_PP);
+	servo1.init(GPIO_Mode_AF_PP);
+	servo2.init(GPIO_Mode_AF_PP);
+	servo3.init(GPIO_Mode_AF_PP);
+	servo4.init(GPIO_Mode_AF_PP);
+
 	Tim t4(TIM4, RCC_APB1Periph_TIM4, RCC_APB1PeriphClockCmd);
 	t4.init(1000000, 20000);
+
+	t4_oc1.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
+				TIM_OutputNState_Disable);
+
+	t4_oc2.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
+				TIM_OutputNState_Disable);
+
+	t4_oc3.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
+				TIM_OutputNState_Disable);
 
 	t4_oc4.init(TIM_OCMode_PWM1, TIM_OutputState_Enable,
 			TIM_OutputNState_Disable);
@@ -22,6 +43,11 @@ void setup() {
 	t2.init(1000, 1000);
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 	TIM_Cmd(TIM2, ENABLE);
+
+	t4_oc1.setCompare(1000);
+	t4_oc2.setCompare(1000);
+	t4_oc3.setCompare(1000);
+	t4_oc4.setCompare(1000);
 }
 
 void loop() {
