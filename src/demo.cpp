@@ -1,7 +1,18 @@
 #include "stm32-template.h"
 
+#include "hd44780/hd44780-gpio.h"
+
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC );
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC );
+
+Gpio hd44780_rs(GPIOB, GPIO_Pin_9, RCC_APB2Periph_GPIOB );
+Gpio hd44780_en(GPIOB, GPIO_Pin_8, RCC_APB2Periph_GPIOB );
+Gpio hd44780_d4(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB );
+Gpio hd44780_d5(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB );
+Gpio hd44780_d6(GPIOB, GPIO_Pin_5, RCC_APB2Periph_GPIOB );
+Gpio hd44780_d7(GPIOB, GPIO_Pin_4, RCC_APB2Periph_GPIOB );
+
+Hd44780Gpio lcd(hd44780_rs, hd44780_en, hd44780_d4, hd44780_d5, hd44780_d6, hd44780_d7);
 
 void setup() {
 
@@ -13,6 +24,8 @@ void setup() {
 	t2.init(1000, 1000);
 	t2.configureIT(TIM_IT_Update);
 	t2.setState();
+
+	lcd.init();
 }
 
 void loop() {
