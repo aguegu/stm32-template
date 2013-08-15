@@ -18,8 +18,6 @@ St7735r tft(spi, dma, tft_ss, tft_reset, tft_rs);
 
 void setup() {
 
-	fprintf(stderr, "hello, world\r\n");
-
 	spi2_sck.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
 	spi2_mosi.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
 
@@ -46,8 +44,6 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	fprintf(stderr, "hello, world.\r\n");
-
 	static uint8_t i = 0;
 	i %= 4;
 
@@ -60,6 +56,5 @@ void loop() {
 	i++;
 
 	led_blue.toggle();
-	delay(1000);
 }
 
