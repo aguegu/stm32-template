@@ -3,7 +3,6 @@
 
 Gpio spi2_sck(GPIOB, GPIO_Pin_13, RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO);
 Gpio spi2_mosi(GPIOB, GPIO_Pin_15, RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO);
-Gpio spi2_miso(GPIOB, GPIO_Pin_14, RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO);
 
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
@@ -23,7 +22,6 @@ void setup() {
 
 	spi2_sck.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
 	spi2_mosi.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
-	spi2_miso.init(GPIO_Mode_IN_FLOATING, GPIO_Speed_50MHz);
 
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
@@ -48,8 +46,9 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	static uint8_t i = 0;
+	fprintf(stderr, "hello, world.\r\n");
 
+	static uint8_t i = 0;
 	i %= 4;
 
 	for (uint8_t j = 0; j < 4; j++) {
@@ -61,5 +60,6 @@ void loop() {
 	i++;
 
 	led_blue.toggle();
+	delay(1000);
 }
 
