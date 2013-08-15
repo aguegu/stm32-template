@@ -13,7 +13,7 @@ Gpio hd44780_d6(GPIOB, GPIO_Pin_5, RCC_APB2Periph_GPIOB);
 Gpio hd44780_d7(GPIOB, GPIO_Pin_4, RCC_APB2Periph_GPIOB);
 
 Hd44780Gpio lcd(hd44780_rs, hd44780_en, hd44780_d4, hd44780_d5, hd44780_d6,
-		hd44780_d7);
+	hd44780_d7);
 
 void setup() {
 
@@ -28,6 +28,9 @@ void setup() {
 
 	lcd.init();
 	lcd.printf("hello, world.");
+	for (uint8_t i = 0; i < 8; i++)
+		lcd.setCache(0x10 + i, i);
+
 	lcd.putCache();
 }
 
@@ -40,10 +43,10 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	fprintf(stdout, "0x%02x\r\n", i++);
-
 	lcd.printf(0x1c, "0x%02x", i);
 	lcd.putCache();
+
+	fprintf(stdout, "0x%02x\r\n", i++);
 
 	//led_blue.toggle();
 	delayMicroseconds(500000);

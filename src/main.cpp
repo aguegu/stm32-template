@@ -23,7 +23,6 @@ void init() {
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
 
 	SysTick_Config(SystemCoreClock / 1000);	// Tick per ms
-	delay(1000);
 
 	setvbuf(stdin, NULL, _IONBF, 0);
 	setvbuf(stdout, NULL, _IONBF, 0);
