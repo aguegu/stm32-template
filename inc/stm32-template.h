@@ -8,15 +8,18 @@
 #ifndef STM32_TEMPLATE_H_
 #define STM32_TEMPLATE_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "stm32f10x.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+
 #include "usart/usart.h"
 #include "gpio/gpio.h"
 #include "tim/tim.h"
 #include "nvic/nvic.h"
-
+#include "i2c/i2c.h"
+#include "adc/adc.h"
 
 void init();
 extern void setup();

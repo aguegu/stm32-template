@@ -11,11 +11,11 @@ void setup() {
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
 
-	nvic.init(TIM2_IRQn, 0, 3, ENABLE);
+	nvic.configure(TIM2_IRQn, 0, 3, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
 	t2.init(1000, 1000);
-	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
-	TIM_Cmd(TIM2, ENABLE);
+	t2.configureIT(TIM_IT_Update);
+	t2.setState();
 
 	Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB );
 	Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB );
