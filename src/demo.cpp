@@ -1,6 +1,7 @@
 #include "stm32-template.h"
 #include "st7920/st7920.h"
 #include <cstring>
+#include "dot-matrix/dot-matrix.h"
 
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
@@ -28,12 +29,17 @@ void setup() {
 	lcd.init();
 
 	//lcd.clear();
-	uint8_t *p = (uint8_t *)malloc(sizeof(uint8_t) * 1024);
-	memset(p, 0x0f, 512);
-	memset(p + 512, 0xf0, 512);
+//	uint8_t *p = (uint8_t *)malloc(sizeof(uint8_t) * 1024);
+//	memset(p, 0x0f, 512);
+//	memset(p + 512, 0xf0, 512);
+//
 
-	uint8_t *ppa = p;
-	uint8_t *ppb = p + 512;
+
+	DotMatrix dm(128, 64);
+	dm.setLine(0,0, 127, 63);
+
+	uint8_t *ppa = dm.output();
+	uint8_t *ppb = dm.output() + 512;
 
 	for (uint8_t r = 0; r < 0x20; r++) {
 		lcd.setDdRam(r); // y
@@ -52,8 +58,6 @@ void setup() {
 //		for (uint8_t i = 16; i--;)
 //			lcd.writeData(*pp++);
 //	}
-
-	free(p);
 }
 
 void loop() {
