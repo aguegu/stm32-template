@@ -1,5 +1,5 @@
 #include "stm32-template.h"
-#include "st7920/st7920.h"
+#include "st7920/st7920-dm.h"
 #include <cstring>
 #include "dot-matrix/dot-matrix.h"
 
@@ -13,14 +13,10 @@ Gpio st7920_d5(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
 Gpio st7920_d6(GPIOB, GPIO_Pin_5, RCC_APB2Periph_GPIOB);
 Gpio st7920_d7(GPIOB, GPIO_Pin_4, RCC_APB2Periph_GPIOB);
 
-St7920 lcd(st7920_rs, st7920_en, st7920_d4, st7920_d5, st7920_d6, st7920_d7);
-
-DotMatrix dm(128, 64);
-
-void display(uint8_t *p);
+St7920Dm lcd(st7920_rs, st7920_en, st7920_d4, st7920_d5, st7920_d6, st7920_d7);
+DotMatrix dm = lcd.getDotMatrix();
 
 void setup() {
-
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
 
@@ -48,22 +44,6 @@ void loop() {
 
 	fprintf(stdout, "0x%02x\r\n", i++);
 
-	display(dm.output());
+	lcd.putDM();
 	dm.move(true);
-}
-
-void display(uint8_t *p) {
-	uint8_t *ppa = p;
-	uint8_t *ppb = p + 512;
-
-	for (uint8_t r = 0; r < 0x20; r++) {
-		lcd.setDdRam(r); // y
-		lcd.setDdRam(0x00); // x
-
-		lcd.transmit(true, ppa, 0x10);
-		lcd.transmit(true, ppb, 0x10);
-
-		ppa += 0x10;
-		ppb += 0x10;
-	}
 }
