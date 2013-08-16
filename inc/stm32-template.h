@@ -30,4 +30,6 @@ extern void delayMicroseconds(vu32 us);
 extern Usart usart;
 extern Nvic nvic;
 
+#define VFONT_7X3
+
 #endif /* STM32_TEMPLATE_H_ */

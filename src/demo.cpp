@@ -2,6 +2,8 @@
 #include "st7920/st7920-dm.h"
 #include <cstring>
 #include "dot-matrix/dot-matrix.h"
+#include "dot-matrix/dot-char.h"
+#include "dot-matrix/dot-font.h"
 
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
@@ -15,6 +17,8 @@ Gpio st7920_d7(GPIOB, GPIO_Pin_4, RCC_APB2Periph_GPIOB);
 
 St7920Dm lcd(st7920_rs, st7920_en, st7920_d4, st7920_d5, st7920_d6, st7920_d7);
 DotMatrix dm = lcd.getDotMatrix();
+
+DotChar dc(dm, vfont_7x3);
 
 void setup() {
 	led_green.init(GPIO_Mode_Out_PP);
@@ -31,10 +35,12 @@ void setup() {
 	dm.setLine(0, 0, 127, 63);
 	dm.setLine(0, 31, 127, 31);
 	dm.setMoveDirection(DotMatrix::BIT_IN_COL_NEGA);
+
+	dc.setChar('A');
+	dc.postAt(0, 0);
 }
 
 void loop() {
-
 	static uint8_t i = 0;
 	while (usart.available()) {
 		char c = usart.read();
