@@ -1,5 +1,7 @@
 #include "stm32-template.h"
 
+#include "i2c/i2c.h"
+
 #include "st7920/st7920-dm.h"
 #include "dot-matrix/dot-matrix.h"
 #include "dot-matrix/dot-char.h"
@@ -9,34 +11,60 @@
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
 
-Gpio st7920_rs(GPIOB, GPIO_Pin_9, RCC_APB2Periph_GPIOB);
-Gpio st7920_en(GPIOB, GPIO_Pin_8, RCC_APB2Periph_GPIOB);
-Gpio st7920_d4(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
-Gpio st7920_d5(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
-Gpio st7920_d6(GPIOB, GPIO_Pin_5, RCC_APB2Periph_GPIOB);
-Gpio st7920_d7(GPIOB, GPIO_Pin_4, RCC_APB2Periph_GPIOB);
+Gpio st7920_rs(GPIOC, GPIO_Pin_12, RCC_APB2Periph_GPIOC);
+Gpio st7920_en(GPIOC, GPIO_Pin_11, RCC_APB2Periph_GPIOC);
+Gpio st7920_d4(GPIOC, GPIO_Pin_10, RCC_APB2Periph_GPIOC);
+Gpio st7920_d5(GPIOA, GPIO_Pin_15, RCC_APB2Periph_GPIOA);
+Gpio st7920_d6(GPIOA, GPIO_Pin_14, RCC_APB2Periph_GPIOA);
+Gpio st7920_d7(GPIOA, GPIO_Pin_13, RCC_APB2Periph_GPIOA);
+
+Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
+Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
+I2c i2c(I2C1, RCC_APB1Periph_I2C1);
 
 St7920Dm lcd(st7920_rs, st7920_en, st7920_d4, st7920_d5, st7920_d6, st7920_d7);
 DotMatrix dm = lcd.getDotMatrix();
 
 DotChar dc(dm, vfont_7x3);
-DotString ds(dc, 16, true);
+DotString ds(dc, 16, false);
 
-DotChar dc2(dm, vfont_5x3);
-DotString ds2(dc2, 16, false);
+const char* titles[] = { "        -     +", "ADXL345:", "X:", "Y:", "Z:", "",
+		"ITG3200:", "X:", "Y:", "Z:", "", "HMC5883:", "X:", "Y:", "Z:" };
 
-DotChar dc3(dm, vfont_6x3);
-DotString ds3(dc3, 16, false);
+void display();
 
-DotChar dc4(dm, vfont_8x3);
-DotString ds4(dc4, 16, false);
+void writeToWire(uint8_t device, uint8_t address, uint8_t val) {
+	uint8_t s[2];
+	s[0] = address;
+	s[1] = val;
+	i2c.write(device, s, 2);
+}
 
-DotChar dc5(dm, vfont_7x5);
-DotString ds5(dc5, 16, false);
+void readFromWire(uint8_t device, uint8_t address, uint8_t * p, uint8_t count) {
+	i2c.write(device, &address, 1);
+	i2c.read(device, p, count);
+}
 
 void setup() {
+
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
+
+	i2c_scl.init(GPIO_Mode_AF_OD);
+	i2c_sda.init(GPIO_Mode_AF_OD);
+
+	i2c.init(I2C_Mode_I2C, 400000);
+	writeToWire(0x53, 0x2d, 0x08); // 345
+	writeToWire(0x53, 0x2c, 0x09); // 345
+
+	writeToWire(0x1e, 0x00, 0x70); //3886
+	writeToWire(0x1e, 0x01, 0x20); //3886
+	writeToWire(0x1e, 0x02, 0x00); //3886
+
+	writeToWire(0x68, 0x3e, 0x00); //3200
+	writeToWire(0x68, 0x15, 19); //3200
+	writeToWire(0x68, 0x16, 0x1e); //3200
+	writeToWire(0x68, 0x17, 0x00); //3200
 
 	nvic.configure(TIM2_IRQn, 0, 3, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
@@ -45,25 +73,7 @@ void setup() {
 	t2.setState();
 
 	lcd.init();
-
-	dm.setLine(63, 0, 63, 63);
-	dm.setLine(0, 31, 127, 31);
-	dm.setMoveDirection(DotMatrix::BIT_IN_COL_NEGA);
-
-	ds.printf("hello, world.");
-	ds.postAt(0, 56);
-
-	ds2.printf("0123456789");
-	ds2.postAt(0, 8);
-
-	ds3.printf("0123456789");
-	ds3.postAt(0, 14);
-
-	ds4.printf("0123456789");
-	ds4.postAt(0, 21);
-
-	ds5.printf("0123456789");
-	ds5.postAt(0, 0);
+	dc.setVertical(false);
 }
 
 void loop() {
@@ -76,7 +86,53 @@ void loop() {
 
 	fprintf(stdout, "0x%02x\r\n", i++);
 
+	display();
+}
+
+void showData(int16_t *val, uint8_t row, uint8_t shift_right) {
+	static const uint8_t mid = 18;
+	for (uint8_t i = 0; i < 3; i++) {
+		ds.printf("%04X", (uint16_t) val[i]);
+		uint8_t r = row + 8 * i;
+		ds.postAt(8, r);
+		dm.setLine(r + 1, 18, r + 6, 18);
+		dm.setRect(r + 4, mid, r + 5, mid - (val[i] >> shift_right));
+	}
+}
+
+void display() {
+
+	dm.clear();
+	uint8_t data[6];
+	int16_t val[3];
+
+	for (uint8_t i = 0; i < 15; i++) {
+		uint8_t j = 8 * i;
+		ds.printf(titles[i]);
+		ds.postAt(0, j);
+		//dm.setLine(j + 1, 18,  j + 6, 18);
+	}
+
+	readFromWire(0x53, 0x32, data, 6);
+	for (uint8_t i = 0; i < 3; i++)
+		val[i] = make16(data[i + i + 1], data[i + i]);
+	showData(val, 16, 4);
+
+	readFromWire(0x68, 0x1d, data, 6);
+	for (uint8_t i = 0; i < 3; i++)
+		val[i] = make16(data[i + i], data[i + i + 1]);
+	showData(val, 56, 8);
+
+	readFromWire(0x1e, 0x03, data, 6);
+	for (uint8_t i = 0; i < 3; i++)
+		val[i] = make16(data[i + i], data[i + i + 1]);
+
+	int16_t temp = val[1];
+	val[1] = val[2];
+	val[2] = temp;
+
+	showData(val, 96, 5);
+
 	lcd.putDM();
-	dm.move(true);
-	delay(200);
+
 }

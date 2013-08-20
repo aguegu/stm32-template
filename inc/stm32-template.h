@@ -18,8 +18,6 @@
 #include "gpio/gpio.h"
 #include "tim/tim.h"
 #include "nvic/nvic.h"
-#include "i2c/i2c.h"
-#include "adc/adc.h"
 
 void init();
 extern void setup();
