@@ -1,6 +1,6 @@
 #include "stm32-template.h"
+
 #include "st7920/st7920-dm.h"
-#include <cstring>
 #include "dot-matrix/dot-matrix.h"
 #include "dot-matrix/dot-char.h"
 #include "dot-matrix/dot-font.h"
