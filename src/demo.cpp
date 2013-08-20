@@ -22,6 +22,9 @@ DotMatrix dm = lcd.getDotMatrix();
 DotChar dc(dm, vfont_7x3);
 DotString ds(dc, 16, true);
 
+DotChar dc2(dm, vfont_5x3);
+DotString ds2(dc2, 16, true);
+
 void setup() {
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
@@ -40,6 +43,9 @@ void setup() {
 
 	ds.printf("hello, world.");
 	ds.postAt(0, 0);
+
+	ds2.printf("0123456789");
+	ds2.postAt(0, 8);
 }
 
 void loop() {

@@ -31,5 +31,6 @@ extern Usart usart;
 extern Nvic nvic;
 
 #define USE_VFONT_7X3
+#define USE_VFONT_5X3
 
 #endif /* STM32_TEMPLATE_H_ */
