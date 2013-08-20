@@ -23,7 +23,16 @@ DotChar dc(dm, vfont_7x3);
 DotString ds(dc, 16, true);
 
 DotChar dc2(dm, vfont_5x3);
-DotString ds2(dc2, 16, true);
+DotString ds2(dc2, 16, false);
+
+DotChar dc3(dm, vfont_6x3);
+DotString ds3(dc3, 16, false);
+
+DotChar dc4(dm, vfont_8x3);
+DotString ds4(dc4, 16, false);
+
+DotChar dc5(dm, vfont_7x5);
+DotString ds5(dc5, 16, false);
 
 void setup() {
 	led_green.init(GPIO_Mode_Out_PP);
@@ -42,10 +51,19 @@ void setup() {
 	dm.setMoveDirection(DotMatrix::BIT_IN_COL_NEGA);
 
 	ds.printf("hello, world.");
-	ds.postAt(0, 0);
+	ds.postAt(0, 56);
 
 	ds2.printf("0123456789");
 	ds2.postAt(0, 8);
+
+	ds3.printf("0123456789");
+	ds3.postAt(0, 14);
+
+	ds4.printf("0123456789");
+	ds4.postAt(0, 21);
+
+	ds5.printf("0123456789");
+	ds5.postAt(0, 0);
 }
 
 void loop() {
