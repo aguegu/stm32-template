@@ -7,6 +7,9 @@ Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
 I2c i2c(I2C1, RCC_APB1Periph_I2C1);
 Ds3231 ds(i2c);
 
+Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
+Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
+
 void setup() {
 
 	led_green.init(GPIO_Mode_Out_PP);
@@ -18,12 +21,13 @@ void setup() {
 	t2.configureIT(TIM_IT_Update);
 	t2.setState();
 
-	Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
-	Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
 	i2c_scl.init(GPIO_Mode_AF_OD);
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
 	ds.init();
+
+	ds.setTime(12, 34, 56);
+	ds.setDate(13, 8, 21, 3);
 }
 
 void loop() {
@@ -35,14 +39,15 @@ void loop() {
 
 	ds.refresh();
 
-	fprintf(stdout, "%02x-%02x-%02x %02x %02x:%02x:%02x\r\n",
+	fprintf(stdout, "%02x-%02x-%02x %02x %02x:%02x:%02x %.2f\r\n",
 			ds.getHexData(YEAR),
 			ds.getHexData(MONTH),
 			ds.getHexData(DATE),
 			ds.getHexData(WEEKDAY),
 			ds.getHexData(HOUR),
 			ds.getHexData(MINUTE),
-			ds.getHexData(SECOND)
+			ds.getHexData(SECOND),
+			ds.getTemperature()
 	);
 
 	led_blue.toggle();
