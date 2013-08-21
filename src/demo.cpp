@@ -33,18 +33,6 @@ const char* titles[] = { "        -     +", "ADXL345:", "X:", "Y:", "Z:", "",
 
 void display();
 
-void writeToWire(uint8_t device, uint8_t address, uint8_t val) {
-	uint8_t s[2];
-	s[0] = address;
-	s[1] = val;
-	i2c.write(device, s, 2);
-}
-
-void readFromWire(uint8_t device, uint8_t address, uint8_t * p, uint8_t count) {
-	i2c.write(device, &address, 1);
-	i2c.read(device, p, count);
-}
-
 void setup() {
 
 	led_green.init(GPIO_Mode_Out_PP);
@@ -54,17 +42,17 @@ void setup() {
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
 	i2c.init(I2C_Mode_I2C, 400000);
-	writeToWire(0x53, 0x2d, 0x08); // 345
-	writeToWire(0x53, 0x2c, 0x09); // 345
+	i2c.setReg(0x53, 0x2d, 0x08); // 345
+	i2c.setReg(0x53, 0x2c, 0x09); // 345
 
-	writeToWire(0x1e, 0x00, 0x70); //3886
-	writeToWire(0x1e, 0x01, 0x20); //3886
-	writeToWire(0x1e, 0x02, 0x00); //3886
+	i2c.setReg(0x1e, 0x00, 0x70); // 3886
+	i2c.setReg(0x1e, 0x01, 0x20); // 3886
+	i2c.setReg(0x1e, 0x02, 0x00); // 3886
 
-	writeToWire(0x68, 0x3e, 0x00); //3200
-	writeToWire(0x68, 0x15, 19); //3200
-	writeToWire(0x68, 0x16, 0x1e); //3200
-	writeToWire(0x68, 0x17, 0x00); //3200
+	i2c.setReg(0x68, 0x3e, 0x00); // 3200
+	i2c.setReg(0x68, 0x15, 19);   // 3200
+	i2c.setReg(0x68, 0x16, 0x1e); // 3200
+	i2c.setReg(0x68, 0x17, 0x00); // 3200
 
 	nvic.configure(TIM2_IRQn, 0, 3, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
@@ -113,17 +101,17 @@ void display() {
 		//dm.setLine(j + 1, 18,  j + 6, 18);
 	}
 
-	readFromWire(0x53, 0x32, data, 6);
+	i2c.getReg(0x53, 0x32, data, 6);
 	for (uint8_t i = 0; i < 3; i++)
 		val[i] = make16(data[i + i + 1], data[i + i]);
 	showData(val, 16, 4);
 
-	readFromWire(0x68, 0x1d, data, 6);
+	i2c.getReg(0x68, 0x1d, data, 6);
 	for (uint8_t i = 0; i < 3; i++)
 		val[i] = make16(data[i + i], data[i + i + 1]);
 	showData(val, 56, 8);
 
-	readFromWire(0x1e, 0x03, data, 6);
+	i2c.getReg(0x1e, 0x03, data, 6);
 	for (uint8_t i = 0; i < 3; i++)
 		val[i] = make16(data[i + i], data[i + i + 1]);
 
