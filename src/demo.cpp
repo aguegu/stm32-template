@@ -78,13 +78,16 @@ void loop() {
 }
 
 void showData(int16_t *val, uint8_t row, uint8_t shift_right) {
-	static const uint8_t mid = 18;
+	static const uint8_t mid = 20;
 	for (uint8_t i = 0; i < 3; i++) {
 		ds.printf("%04X", (uint16_t) val[i]);
 		uint8_t r = row + 8 * i;
 		ds.postAt(8, r);
-		dm.setLine(r + 1, 18, r + 6, 18);
-		dm.setRect(r + 4, mid, r + 5, mid - (val[i] >> shift_right));
+		dm.setLine(r + 1, mid, r + 6, mid);
+		int8_t end = mid - (val[i] >> shift_right);
+		end = rawmax(end, 0);
+		end = rawmin(end, 39);
+		dm.setRect(r + 4, mid, r + 5, end);
 	}
 }
 
@@ -98,7 +101,6 @@ void display() {
 		uint8_t j = 8 * i;
 		ds.printf(titles[i]);
 		ds.postAt(0, j);
-		//dm.setLine(j + 1, 18,  j + 6, 18);
 	}
 
 	i2c.getReg(0x53, 0x32, data, 6);
