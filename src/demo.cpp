@@ -39,6 +39,8 @@ void display();
 
 void setup() {
 
+	delay(1000);
+
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
 
@@ -74,16 +76,10 @@ void loop() {
 }
 
 void showData(const float *val, uint8_t row, uint8_t shift_right) {
-	//static const uint8_t mid = 20;
 	for (uint8_t i = 0; i < 3; i++) {
 		ds.printf("%+f", val[i]);
 		uint8_t r = row + 8 * i;
 		ds.postAt(8, r);
-//		dm.setLine(r + 1, mid, r + 6, mid);
-//		int8_t end = mid - (val[i] >> shift_right);
-//		end = rawmax(end, 0);
-//		end = rawmin(end, 39);
-//		dm.setRect(r + 4, mid, r + 5, end);
 	}
 }
 
