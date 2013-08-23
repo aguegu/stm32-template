@@ -39,7 +39,7 @@ void display();
 
 void setup() {
 
-	delay(1000);
+	delay(100);
 
 	led_green.init(GPIO_Mode_Out_PP);
 	led_blue.init(GPIO_Mode_Out_PP);
