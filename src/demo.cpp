@@ -1,6 +1,7 @@
 #include "stm32-template.h"
 
 #include "i2c/i2c.h"
+#include "adxl345/adxl345.h"
 
 #include "st7920/st7920-dm.h"
 #include "dot-matrix/dot-matrix.h"
@@ -28,6 +29,9 @@ DotMatrix dm = lcd.getDotMatrix();
 DotChar dc(dm, vfont_7x3);
 DotString ds(dc, 16, false);
 
+
+Adxl345 acclerator(i2c);
+
 const char* titles[] = { "        -     +", "ADXL345:", "X:", "Y:", "Z:", "",
 		"ITG3200:", "X:", "Y:", "Z:", "", "HMC5883:", "X:", "Y:", "Z:" };
 
@@ -42,17 +46,9 @@ void setup() {
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
 	i2c.init(I2C_Mode_I2C, 400000);
-	i2c.setReg(0x53, 0x2d, 0x08); // 345
-	i2c.setReg(0x53, 0x2c, 0x09); // 345
 
-	i2c.setReg(0x1e, 0x00, 0x70); // 3886
-	i2c.setReg(0x1e, 0x01, 0x20); // 3886
-	i2c.setReg(0x1e, 0x02, 0x00); // 3886
-
-	i2c.setReg(0x68, 0x3e, 0x00); // 3200
-	i2c.setReg(0x68, 0x15, 19);   // 3200
-	i2c.setReg(0x68, 0x16, 0x1e); // 3200
-	i2c.setReg(0x68, 0x17, 0x00); // 3200
+	acclerator.init();
+	acclerator.calibrate();
 
 	nvic.configure(TIM2_IRQn, 0, 3, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
@@ -77,25 +73,23 @@ void loop() {
 	display();
 }
 
-void showData(int16_t *val, uint8_t row, uint8_t shift_right) {
-	static const uint8_t mid = 20;
+void showData(const float *val, uint8_t row, uint8_t shift_right) {
+	//static const uint8_t mid = 20;
 	for (uint8_t i = 0; i < 3; i++) {
-		ds.printf("%04X", (uint16_t) val[i]);
+		ds.printf("%+f", val[i]);
 		uint8_t r = row + 8 * i;
 		ds.postAt(8, r);
-		dm.setLine(r + 1, mid, r + 6, mid);
-		int8_t end = mid - (val[i] >> shift_right);
-		end = rawmax(end, 0);
-		end = rawmin(end, 39);
-		dm.setRect(r + 4, mid, r + 5, end);
+//		dm.setLine(r + 1, mid, r + 6, mid);
+//		int8_t end = mid - (val[i] >> shift_right);
+//		end = rawmax(end, 0);
+//		end = rawmin(end, 39);
+//		dm.setRect(r + 4, mid, r + 5, end);
 	}
 }
 
 void display() {
 
 	dm.clear();
-	uint8_t data[6];
-	int16_t val[3];
 
 	for (uint8_t i = 0; i < 15; i++) {
 		uint8_t j = 8 * i;
@@ -103,25 +97,8 @@ void display() {
 		ds.postAt(0, j);
 	}
 
-	i2c.getReg(0x53, 0x32, data, 6);
-	for (uint8_t i = 0; i < 3; i++)
-		val[i] = make16(data[i + i + 1], data[i + i]);
-	showData(val, 16, 4);
-
-	i2c.getReg(0x68, 0x1d, data, 6);
-	for (uint8_t i = 0; i < 3; i++)
-		val[i] = make16(data[i + i], data[i + i + 1]);
-	showData(val, 56, 8);
-
-	i2c.getReg(0x1e, 0x03, data, 6);
-	for (uint8_t i = 0; i < 3; i++)
-		val[i] = make16(data[i + i], data[i + i + 1]);
-
-	int16_t temp = val[1];
-	val[1] = val[2];
-	val[2] = temp;
-
-	showData(val, 96, 5);
+	acclerator.measure();
+	showData(acclerator.getAcceleratins(), 16, 4);
 
 	lcd.putDM();
 
