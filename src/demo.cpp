@@ -23,6 +23,7 @@ void setup() {
 	i2c_scl.init(GPIO_Mode_AF_OD);
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
+	i2c.init();
 	ds.init();
 }
 
