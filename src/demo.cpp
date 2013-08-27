@@ -36,8 +36,11 @@ void loop() {
 	}
 
 	uint8_t c[2];
-	eeprom.read(0x00, c, 2);
-	fprintf(stdout, "0x%02X, 0x%02X\r\n", c[0], c[1]);
+	uint8_t k = eeprom.read(0x00, c, 2);
+	//fprintf(stdout, "0x%02X, 0x%02X\r\n", c[0], c[1]);
+	fprintf(stdout, "0x%02X\r\n", k);
+
+	delay(5);
 
 	static uint8_t s[2] = { 0xbe, 0xef };
 	eeprom.write(0, s, 2);
