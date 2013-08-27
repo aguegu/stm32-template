@@ -15,6 +15,7 @@ void setup() {
 	nvic.configure(TIM1_CC_IRQn, 0, 1, ENABLE);
 	Tim t2(TIM2, RCC_APB1Periph_TIM2, RCC_APB1PeriphClockCmd);
 	t2.init(1000, 1000);
+
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 
 	ultrasonic_sensor_trig.init(GPIO_Mode_AF_PP, GPIO_Speed_50MHz);
