@@ -11,6 +11,8 @@ Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
 
 At24c eeprom(i2c, 16, 0x50);
 
+uint8_t data[16];
+
 void setup() {
 
 	led_green.init(GPIO_Mode_Out_PP);
@@ -26,6 +28,9 @@ void setup() {
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
 	i2c.init();
+
+	for (uint8_t i = 0; i < 16; i++)
+		data[i] = i;
 }
 
 void loop() {
@@ -35,18 +40,16 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	uint8_t c[2];
-	uint8_t k = eeprom.read(0x00, c, 2);
-	//fprintf(stdout, "0x%02X, 0x%02X\r\n", c[0], c[1]);
-	fprintf(stdout, "0x%02X\r\n", k);
+	uint8_t c[16];
+	eeprom.read(0x00, c, 16);
 
-	delay(5);
+	for (uint8_t i = 0; i < 16; i++)
+		fprintf(stdout, "0x%02X, ", c[i]);
+	fprintf(stdout, "\r\n");
 
-	static uint8_t s[2] = { 0xbe, 0xef };
-	eeprom.write(0, s, 2);
-
-	s[0]++;
-	s[1]++;
+	static uint8_t index = 0;
+	eeprom.write(index++, data, 16);
+	index %= 16;
 
 	led_blue.toggle();
 	delay(1000);
