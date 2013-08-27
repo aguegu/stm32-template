@@ -3,7 +3,11 @@
 int main(void) __attribute__((weak));
 
 Usart usart(USART1, RCC_APB2Periph_USART1, RCC_APB2PeriphClockCmd);
-Nvic nvic;
+// if usart changed, there have to be modified corresponding:
+// GPIO in main.cpp
+// Interrupt handler prototype in stm32f10x_it.h
+// Interrupt handler function in stm32f10x_it.cpp
+// nvic configure in main.cpp
 
 int main(void) {
 	init();
@@ -15,25 +19,27 @@ int main(void) {
 
 void init() {
 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
+
 	SysTick_Config(SystemCoreClock / 1000);	// Tick per ms
-	delay(1000);
-
-	Gpio usart_tx(GPIOA, GPIO_Pin_9,
-			RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO );
-	usart_tx.init(GPIO_Mode_AF_PP);
-
-	Gpio usart_rx(GPIOA, GPIO_Pin_10,
-			RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO );
-	usart_rx.init(GPIO_Mode_IN_FLOATING);
-
-	usart.init(115200);
 
 	setvbuf(stdin, NULL, _IONBF, 0);
 	setvbuf(stdout, NULL, _IONBF, 0);
 	setvbuf(stderr, NULL, _IONBF, 0);
 
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0 );
-	nvic.init(USART1_IRQn, 0, 2, ENABLE);
+	Gpio usart_tx(GPIOA, GPIO_Pin_9,
+		RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO);
+	usart_tx.init(GPIO_Mode_AF_OD);
+
+	Gpio usart_rx(GPIOA, GPIO_Pin_10,
+		RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO);
+	usart_rx.init(GPIO_Mode_IN_FLOATING);
+
+	usart.init(115200);
+
+	nvic.configureGroup(NVIC_PriorityGroup_0);
+	nvic.configure(USART1_IRQn, 0, 2, ENABLE);
 }
 
 void delay(u32 ms) {
