@@ -1,4 +1,5 @@
 #include "stm32-template.h"
+#include "at24c/at24c.h"
 
 Gpio led_green(GPIOC, GPIO_Pin_9, RCC_APB2Periph_GPIOC);
 Gpio led_blue(GPIOC, GPIO_Pin_8, RCC_APB2Periph_GPIOC);
@@ -7,6 +8,8 @@ I2c i2c(I2C1, RCC_APB1Periph_I2C1);
 
 Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
 Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
+
+At24c eeprom(i2c, 16, 0x50);
 
 void setup() {
 
@@ -32,16 +35,15 @@ void loop() {
 		led_blue.toggle();
 	}
 
-	uint8_t c[2] = { 0x00, 0x00 };
-	i2c.write(0x50, c, 2, DISABLE);
-	i2c.read(0x50, c, 2, DISABLE);
+	uint8_t c[2];
+	eeprom.read(0x00, c, 2);
 	fprintf(stdout, "0x%02X, 0x%02X\r\n", c[0], c[1]);
 
-	static uint8_t s[4] = { 0x00, 0x00, 0xbe, 0xef };
-	i2c.write(0x50, s, 4);
+	static uint8_t s[2] = { 0xbe, 0xef };
+	eeprom.write(0, s, 2);
 
-	s[2]++;
-	s[3]++;
+	s[0]++;
+	s[1]++;
 
 	led_blue.toggle();
 	delay(1000);
