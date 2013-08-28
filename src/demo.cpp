@@ -9,7 +9,7 @@ I2c i2c(I2C1, RCC_APB1Periph_I2C1);
 Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
 Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
 
-At24c eeprom(i2c, 0x50);
+At24c eeprom(i2c, 16, 0x50);
 
 uint8_t data[16];
 uint8_t data2[16];
@@ -68,7 +68,9 @@ void loop() {
 
 	static uint8_t index = 0;
 	eeprom.write(index, data, 16);
+	delay(5);
 	eeprom.write(0x100 + index, data2, 16);
+	delay(5);
 	eeprom.write(0x200 + (index++) % 4 * sizeof(float), data3, sizeof(float) * 4);
 	index %= 16;
 
