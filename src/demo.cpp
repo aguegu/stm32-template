@@ -13,6 +13,7 @@ At24c eeprom(i2c, 0x50);
 
 uint8_t data[16];
 uint8_t data2[16];
+float data3[4];
 
 void setup() {
 
@@ -34,6 +35,11 @@ void setup() {
 		data[i] = i;
 		data2[i] = ~data[i];
 	}
+
+	data3[0] = 10.0;
+	data3[1] = 1.0;
+	data3[2] = 0.01;
+	data3[3] = 0.001;
 }
 
 void loop() {
@@ -55,9 +61,15 @@ void loop() {
 		fprintf(stdout, "0x%02X, ", c[i]);
 	fprintf(stdout, "\r\n\r\n");
 
+	float flt[4];
+	eeprom.read(0x200, flt, sizeof(float) * 4);
+	for (uint8_t i = 0; i < 4; i++)
+		fprintf(stdout, "%f\r\n", flt[i]);
+
 	static uint8_t index = 0;
 	eeprom.write(index, data, 16);
-	eeprom.write(0x100 + index++, data2, 16);
+	eeprom.write(0x100 + index, data2, 16);
+	eeprom.write(0x200 + (index++) % 4 * sizeof(float), data3, sizeof(float) * 4);
 	index %= 16;
 
 	led_blue.toggle();
