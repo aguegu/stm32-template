@@ -9,9 +9,10 @@ I2c i2c(I2C1, RCC_APB1Periph_I2C1);
 Gpio i2c_scl(GPIOB, GPIO_Pin_6, RCC_APB2Periph_GPIOB);
 Gpio i2c_sda(GPIOB, GPIO_Pin_7, RCC_APB2Periph_GPIOB);
 
-At24c eeprom(i2c, 16, 0x50);
+At24c eeprom(i2c, 0x50);
 
 uint8_t data[16];
+uint8_t data2[16];
 
 void setup() {
 
@@ -29,8 +30,10 @@ void setup() {
 
 	i2c.init();
 
-	for (uint8_t i = 0; i < 16; i++)
+	for (uint8_t i = 0; i < 16; i++) {
 		data[i] = i;
+		data2[i] = ~data[i];
+	}
 }
 
 void loop() {
@@ -47,8 +50,14 @@ void loop() {
 		fprintf(stdout, "0x%02X, ", c[i]);
 	fprintf(stdout, "\r\n");
 
+	eeprom.read(0x100, c, 16);
+	for (uint8_t i = 0; i < 16; i++)
+		fprintf(stdout, "0x%02X, ", c[i]);
+	fprintf(stdout, "\r\n\r\n");
+
 	static uint8_t index = 0;
-	eeprom.write(index++, data, 16);
+	eeprom.write(index, data, 16);
+	eeprom.write(0x100 + index++, data2, 16);
 	index %= 16;
 
 	led_blue.toggle();
