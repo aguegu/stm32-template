@@ -29,7 +29,7 @@ void setup() {
 	i2c_scl.init(GPIO_Mode_AF_OD);
 	i2c_sda.init(GPIO_Mode_AF_OD);
 
-	i2c.init();
+	i2c.init(I2C_Mode_I2C, 400000);
 
 	for (uint8_t i = 0; i < 16; i++) {
 		data[i] = i;
@@ -51,27 +51,37 @@ void loop() {
 
 	uint8_t c[16];
 	eeprom.read(0x00, c, 16);
+	delay(5);
 
 	for (uint8_t i = 0; i < 16; i++)
 		fprintf(stdout, "0x%02X, ", c[i]);
 	fprintf(stdout, "\r\n");
 
 	eeprom.read(0x100, c, 16);
+	delay(5);
+
 	for (uint8_t i = 0; i < 16; i++)
 		fprintf(stdout, "0x%02X, ", c[i]);
 	fprintf(stdout, "\r\n\r\n");
 
 	float flt[4];
 	eeprom.read(0x200, flt, sizeof(float) * 4);
+	delay(5);
+
 	for (uint8_t i = 0; i < 4; i++)
 		fprintf(stdout, "%f\r\n", flt[i]);
 
 	static uint8_t index = 0;
 	eeprom.write(index, data, 16);
-	delay(5);
+	delay(10);
 	eeprom.write(0x100 + index, data2, 16);
-	delay(5);
-	eeprom.write(0x200 + (index++) % 4 * sizeof(float), data3, sizeof(float) * 4);
+	delay(10);
+	uint8_t k = eeprom.write(0x200 + (index++) % 4 * sizeof(float), (void *) data3,
+			sizeof(float) * 4);
+	delay(10);
+
+	printf("%d\r\n", k);
+
 	index %= 16;
 
 	led_blue.toggle();
