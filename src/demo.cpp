@@ -62,23 +62,21 @@ void loop() {
 		fprintf(stdout, "0x%02X, ", c[i]);
 	fprintf(stdout, "\r\n\r\n");
 
-	float flt[4]; uint8_t k;
-	k = eeprom.read(0x200, flt, 16);
+	float flt[4];
+	eeprom.read(0x200, flt, 16);
 
 	for (uint8_t i = 0; i < 4; i++)
-		fprintf(stdout, "%f\r\n", flt[i]);
+		fprintf(stdout, "%f ", flt[i]);
 
-	printf("%d\r\n", k);
+	printf("\r\n");
 
 	static uint8_t index = 0;
 	eeprom.write(index, data, 16);
 	delay(5);
 	eeprom.write(0x100 + index++, data2, 16);
 	delay(5);
-	k = eeprom.write(0x200 + (index++) % 4 * sizeof(float), data3,
+	eeprom.write(0x200 + (index++) % 4 * sizeof(float), data3,
 			sizeof(float) * 4);
-
-	printf("%d\r\n", k);
 
 	index %= 16;
 
