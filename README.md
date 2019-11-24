@@ -1,6 +1,8 @@
 stm32f10x-stdperiph-lib
 ===
 
+with gcc-arm-none-eabi-8-2019-q3-update
+
 1. Download `en.stsw-stm32054.zip` from https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html
 
 2. create `STM32F10x_StdPeriph_Lib_V3.5.0.tar.gz`
