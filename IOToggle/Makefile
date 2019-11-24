@@ -1,19 +1,24 @@
 UID = $(shell id -u)
 GID = $(shell id -g)
 
-dist:
-	docker run -t --rm -v ${CURDIR}:/root/workspace aguegu/stm32f10x-stdperiph-lib:3.5.0 sh -c "\
-		make -f stm32.Makefile \
-		&& chown $(UID):$(GID) *.bin *.elf *.hex \
-	"
-
-flash:
-	st-flash --format ihex write ch.hex
-
 clean:
-	rm -f *.elf *.hex *.bin
+	rm -rf develop
+	rm -rf release
 
-all:
-	make dist && make flash
+develop:
+	rm -rf $@
+	docker run -t --rm -v ${CURDIR}:/root/workspace aguegu/stm32f10x-stdperiph-lib:3.5.0 sh -c "\
+		make -f stm32.Makefile $@\
+		&& chown $(UID):$(GID) -R . \
+	"
+	st-flash --format ihex write $@/ch.hex
 
-.PHONY: dist flash clean
+release:
+	rm -rf $@
+	docker run -t --rm -v ${CURDIR}:/root/workspace aguegu/stm32f10x-stdperiph-lib:3.5.0 sh -c "\
+		make -f stm32.Makefile $@\
+		&& chown $(UID):$(GID) -R . \
+	"
+	st-flash --format ihex write $@/ch.hex
+
+.PHONY: clean develop release
