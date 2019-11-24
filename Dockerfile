@@ -12,6 +12,7 @@ ADD https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/8-201
 RUN tar xjf gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2 && rm gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2
 ENV PATH /root/gcc-arm-none-eabi-8-2019-q3-update/bin:$PATH
 
-RUN apt-get remove -y bzip2 
+RUN apt-get remove -y bzip2
 
 VOLUME /root/workspace
+WORKDIR /root/workspace
