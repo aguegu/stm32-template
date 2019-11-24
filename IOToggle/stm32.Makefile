@@ -16,11 +16,12 @@ CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 
 # specify compiler flags
-CFLAGS  = -g -O2 -Wall
+CFLAGS  = -g -O2
+# CFLAGS += -Wall
 CFLAGS += -T./stm32_flash.ld
-CFLAGS += -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -flto -fno-move-loop-invariants -Werror -Wall -Wextra  -g3 -DDEBUG -DUSE_FULL_ASSERT
-# CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
-# CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS += -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -flto -fno-move-loop-invariants -Werror -Wextra -g3
+# CFLAGS += -DDEBUG -DUSE_FULL_ASSERT
+CFLAGS += -DHSE_VALUE=8000000
 CFLAGS += -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER
 CFLAGS += -Wl,--gc-sections
 CFLAGS += -I.
@@ -41,8 +42,3 @@ $(PROJECT).elf: $(SOURCES)
 # remove binary files
 clean:
 	rm -f *.o *.elf *.hex *.bin
-
-# flash
-
-flash:
-  st-flash --format ihex write ./ch.hex
