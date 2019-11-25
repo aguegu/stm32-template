@@ -4,3 +4,5 @@ en.stsw-stm32054.zip
 *.bin
 *.elf
 *.hex
+Debug/
+Release/
