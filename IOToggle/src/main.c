@@ -16,9 +16,11 @@ int main(void) {
 
 
 #ifdef  USE_FULL_ASSERT
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wmissing-declarations"
 void assert_failed(uint8_t* file, uint32_t line) {
   while (1);
 }
-
+#pragma GCC diagnostic pop
 #endif

@@ -1,9 +1,6 @@
 UID = $(shell id -u)
 GID = $(shell id -g)
 
-clean:
-	rm -rf develop
-	rm -rf release
 
 develop:
 	rm -rf $@
@@ -20,5 +17,10 @@ release:
 		&& chown $(UID):$(GID) -R . \
 	"
 	st-flash --format ihex write $@/ch.hex
+
+clean:
+	rm -rf develop
+	rm -rf release
+
 
 .PHONY: clean develop release

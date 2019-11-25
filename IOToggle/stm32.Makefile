@@ -21,7 +21,7 @@ BIN  = $(CP) -O binary
 
 # specify compiler flags
 CFLAGS  = -g -O2
-# CFLAGS += -Wall
+CFLAGS += -Wall
 CFLAGS += -T./stm32_flash.ld
 CFLAGS += -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -flto -fno-move-loop-invariants -Werror -Wextra -g3
 CFLAGS += -DHSE_VALUE=8000000
