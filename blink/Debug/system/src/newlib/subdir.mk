@@ -32,13 +32,13 @@ CPP_DEPS += \
 system/src/newlib/%.o: ../system/src/newlib/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C++ Compiler'
-	arm-none-eabi-g++ $(CXXFLAGS) $(INCLUDES) $(GPPFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	arm-none-eabi-g++ $(CXXFLAGS) $(DEFS) $(INCLUDES) $(GPPFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
 system/src/newlib/%.o: ../system/src/newlib/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C Compiler'
-	arm-none-eabi-gcc $(CXXFLAGS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	arm-none-eabi-gcc $(CXXFLAGS) $(DEFS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
