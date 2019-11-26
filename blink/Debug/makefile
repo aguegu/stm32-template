@@ -29,6 +29,10 @@ LIBS :=
 STD_PERIPH_SRC := ../../STM32F10x_StdPeriph_Driver/src
 STD_PERIPH_INC := ../../STM32F10x_StdPeriph_Driver/inc
 
+CXXFLAGS = -mcpu=cortex-m3 -mthumb -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -flto -fno-move-loop-invariants -Werror -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wpadded -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal  -g3 -DDEBUG -DUSE_FULL_ASSERT -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000
+GCCFLAGS = -std=gnu11 -Wmissing-prototypes -Wstrict-prototypes -Wbad-function-cast -MMD -MP
+GPPFLAGS = -std=gnu++11 -fabi-version=0 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics -Wctor-dtor-privacy -Wnoexcept -Wnon-virtual-dtor -Wstrict-null-sentinel -Wsign-promo -MMD -MP
+
 -include system/src/stm32f1-stdperiph/subdir.mk
 -include system/src/newlib/subdir.mk
 -include system/src/diag/subdir.mk
