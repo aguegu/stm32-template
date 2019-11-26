@@ -3,17 +3,11 @@ stm32f10x-stdperiph-lib
 
 with gcc-arm-none-eabi-8-2019-q3-update
 
-1. Download `en.stsw-stm32054.zip` from https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html
+1. original `STM32F10x_StdPeriph_Lib_V3.5.0` can be downloaded within `en.stsw-stm32054.zip` from https://www.st.com/content/st_com/en/products/embedded-software/mcu-mpu-embedded-software/stm32-embedded-software/stm32-standard-peripheral-libraries/stsw-stm32054.html
 
-2. create `STM32F10x_StdPeriph_Lib_V3.5.0.tar.gz`
+  The `STM32F10x_StdPeriph_Driver` in this repo is ported from `https://gnu-mcu-eclipse.github.io`, with modification to surpress compile warnings.
 
-```
-$ unzip en.stsw-stm32054.zip
-$ tar czf STM32F10x_StdPeriph_Lib_V3.5.0.tar.gz STM32F10x_StdPeriph_Lib_V3.5.0
-$ rm -rf STM32F10x_StdPeriph_Lib_V3.5.0
-```
-
-3. build image
+2. build image
 
 ```
 $ docker build -t "aguegu/stm32f10x-stdperiph-lib:3.5.0" .
