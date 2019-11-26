@@ -1,9 +1,3 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
-# Add inputs and outputs from these tool invocations to the build variables
-
 C_SRCS += \
 $(STD_PERIPH_SRC)/misc.c \
 $(STD_PERIPH_SRC)/stm32f10x_gpio.c \
@@ -24,6 +18,6 @@ C_DEPS += \
 system/src/stm32f1-stdperiph/%.o: $(STD_PERIPH_SRC)/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C Compiler'
-	arm-none-eabi-gcc $(CXXFLAGS) -I"../include" -I"../system/include" -I"../system/include/cmsis" -I"${STD_PERIPH_INC}" $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	arm-none-eabi-gcc $(CXXFLAGS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '

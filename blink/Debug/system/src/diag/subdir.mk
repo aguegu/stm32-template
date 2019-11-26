@@ -16,6 +16,6 @@ C_DEPS += \
 system/src/diag/%.o: ../system/src/diag/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C Compiler'
-	arm-none-eabi-gcc $(CXXFLAGS) -I"../include" -I"../system/include" -I"../system/include/cmsis" -I"${STD_PERIPH_INC}" $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
+	arm-none-eabi-gcc $(CXXFLAGS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
