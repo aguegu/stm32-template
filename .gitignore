@@ -4,3 +4,6 @@ en.stsw-stm32054.zip
 *.bin
 *.elf
 *.hex
+*.o
+*.d
+*.map

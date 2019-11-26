@@ -26,6 +26,9 @@ CPP_DEPS :=
 USER_OBJS :=
 LIBS :=
 
+STD_PERIPH_SRC := ../../STM32F10x_StdPeriph_Driver/src
+STD_PERIPH_INC := ../../STM32F10x_StdPeriph_Driver/inc
+
 -include system/src/stm32f1-stdperiph/subdir.mk
 -include system/src/newlib/subdir.mk
 -include system/src/diag/subdir.mk
