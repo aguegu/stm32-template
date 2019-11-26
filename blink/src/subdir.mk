@@ -20,6 +20,7 @@ C_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.c
+	mkdir -p $(dir $@)
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C Compiler'
 	arm-none-eabi-gcc $(CXXFLAGS) $(DEFS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"

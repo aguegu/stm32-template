@@ -30,6 +30,7 @@ CPP_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 system/src/newlib/%.o: ../system/src/newlib/%.cpp
+	mkdir -p $(dir $@)
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C++ Compiler'
 	arm-none-eabi-g++ $(CXXFLAGS) $(DEFS) $(INCLUDES) $(GPPFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
@@ -37,6 +38,7 @@ system/src/newlib/%.o: ../system/src/newlib/%.cpp
 	@echo ' '
 
 system/src/newlib/%.o: ../system/src/newlib/%.c
+	mkdir -p $(dir $@)
 	@echo 'Building file: $<'
 	@echo 'Invoking: GNU ARM Cross C Compiler'
 	arm-none-eabi-gcc $(CXXFLAGS) $(DEFS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
