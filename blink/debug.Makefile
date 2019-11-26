@@ -34,8 +34,6 @@ DEFS := -DDEBUG -DUSE_FULL_ASSERT -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VA
 GCCFLAGS := -std=gnu11 -Wmissing-prototypes -Wstrict-prototypes -Wbad-function-cast -MMD -MP
 GPPFLAGS := -std=gnu++11 -fabi-version=0 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics -Wctor-dtor-privacy -Wnoexcept -Wnon-virtual-dtor -Wstrict-null-sentinel -Wsign-promo -MMD -MP
 
-# -include ../system/src/stm32f1-stdperiph/subdir.mk
-
 C_SRCS += \
 $(STD_PERIPH_SRC)/misc.c \
 $(STD_PERIPH_SRC)/stm32f10x_gpio.c \

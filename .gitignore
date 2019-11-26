@@ -7,3 +7,5 @@ en.stsw-stm32054.zip
 *.o
 *.d
 *.map
+debug/
+release/

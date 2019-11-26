@@ -1,17 +1,15 @@
 debug:
-	mkdir -p Debug
-	cp debug.Makefile Debug/makefile
-	$(MAKE) -C Debug all
+	mkdir -p $@
+	cp debug.Makefile $@/makefile
+	$(MAKE) -C $@ all
 
 release:
-	mkdir -p Release
-	cp release.Makefile Release/makefile
-	$(MAKE) -C Release all
+	mkdir -p $@
+	cp release.Makefile $@/makefile
+	$(MAKE) -C $@ all
 
 clean:
-	# $(MAKE) -C Debug clean
-	rm -rf Debug
-	# $(MAKE) -C Release clean
-	rm -rf Release
+	rm -rf debug
+	rm -rf release
 
 .PHONY: debug release clean
