@@ -34,29 +34,6 @@ DEFS := -DDEBUG -DUSE_FULL_ASSERT -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VA
 GCCFLAGS := -std=gnu11 -Wmissing-prototypes -Wstrict-prototypes -Wbad-function-cast -MMD -MP
 GPPFLAGS := -std=gnu++11 -fabi-version=0 -fno-exceptions -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics -Wctor-dtor-privacy -Wnoexcept -Wnon-virtual-dtor -Wstrict-null-sentinel -Wsign-promo -MMD -MP
 
-C_SRCS += \
-$(STD_PERIPH_SRC)/misc.c \
-$(STD_PERIPH_SRC)/stm32f10x_gpio.c \
-$(STD_PERIPH_SRC)/stm32f10x_rcc.c
-
-OBJS += \
-./system/src/stm32f1-stdperiph/misc.o \
-./system/src/stm32f1-stdperiph/stm32f10x_gpio.o \
-./system/src/stm32f1-stdperiph/stm32f10x_rcc.o
-
-C_DEPS += \
-./system/src/stm32f1-stdperiph/misc.d \
-./system/src/stm32f1-stdperiph/stm32f10x_gpio.d \
-./system/src/stm32f1-stdperiph/stm32f10x_rcc.d
-
-system/src/stm32f1-stdperiph/%.o: $(STD_PERIPH_SRC)/%.c
-	mkdir -p $(dir $@)
-	@echo 'Building file: $<'
-	@echo 'Invoking: GNU ARM Cross C Compiler'
-	arm-none-eabi-gcc $(CXXFLAGS) $(DEFS) $(INCLUDES) $(GCCFLAGS) -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
-	@echo 'Finished building: $<'
-	@echo ' '
-
 -include ../system/src/newlib/subdir.mk
 -include ../system/src/diag/subdir.mk
 -include ../system/src/cortexm/subdir.mk
