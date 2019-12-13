@@ -52,7 +52,7 @@ $(OUTPUT_DIR)/%.o: %.c
 $(OUTPUT_DIR)/$(PROJECT).elf: $(OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU ARM Cross C++ Linker'
-	arm-none-eabi-g++ $(CXXFLAGS) -T mem.ld -T libs.ld -T sections.ld -nostartfiles -Xlinker --gc-sections -L"./ldscripts" -Wl,-Map,"$(PROJECT).map" --specs=nano.specs -o "$(OUTPUT_DIR)/$(PROJECT).elf" $(OBJS)
+	arm-none-eabi-g++ $(CXXFLAGS) -T mem.ld -T libs.ld -T sections.ld -nostartfiles -Xlinker --gc-sections -L"./ldscripts" -Wl,-Map,"$(OUTPUT_DIR)/$(PROJECT).map" --specs=nano.specs -o $@ $(OBJS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
