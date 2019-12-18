@@ -27,11 +27,9 @@ void main(int argc, char* argv[]) {
 
   SysTick_Config(SystemCoreClock / 1000);
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR,ENABLE);
-	// SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-
   PWR_WakeUpPinCmd(ENABLE);
 
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
   GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
